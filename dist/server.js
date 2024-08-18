@@ -18,24 +18,12 @@ const meta_fetcher_1 = __importDefault(require("meta-fetcher"));
 const app = (0, express_1.default)();
 const PORT = 3000;
 const limiter = (0, express_rate_limit_1.default)({
-    windowMs: 1000, // 1 second
-    max: 5, // Limit each IP to 5 requests per windowMs
+    windowMs: 1000,
+    max: 5,
     message: { error: 'Too many requests, please try again later.' },
 });
 app.use(express_1.default.json());
 app.use(limiter);
-app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    return res.json({ "status": "API works" });
-}));
-app.get('/test', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield (0, meta_fetcher_1.default)('https://hoppscotch.io/');
-    try {
-        return res.json({ "data": result });
-    }
-    catch (error) {
-        return res.json({ "error": error });
-    }
-}));
 app.post('/fetch-metadata', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { urls } = req.body;
     if (!urls || !Array.isArray(urls)) {

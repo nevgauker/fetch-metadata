@@ -1,6 +1,4 @@
 import express, { Request, Response } from 'express';
-import axios from 'axios';
-import cheerio from 'cheerio';
 import rateLimit from 'express-rate-limit';
 import metaFetcher from 'meta-fetcher';
 
@@ -16,27 +14,13 @@ interface Metadata {
 }
 
 const limiter = rateLimit({
-    windowMs: 1000, // 1 second
-    max: 5, // Limit each IP to 5 requests per windowMs
+    windowMs: 1000, 
+    max: 5, 
     message: { error: 'Too many requests, please try again later.' },
 });
 
 app.use(express.json());
 app.use(limiter);
-
-app.get('/', async (req: Request, res: Response) => {
-    return res.json({ "status": "API works" });
-});
-app.get('/test', async (req: Request, res: Response) => {
-    const result = await metaFetcher('https://hoppscotch.io/');
-
-    try {
-        return res.json({ "data": result});
-    } catch(error){
-        return res.json({ "error": error});
-    }
-
-});
 
 app.post('/fetch-metadata', async (req: Request, res: Response) => {
     const { urls }: { urls: string[] } = req.body;
