@@ -28,9 +28,9 @@ app.get('/', async (req: Request, res: Response) => {
     return res.json({ "status": "API works" });
 });
 app.get('/test', async (req: Request, res: Response) => {
+    const result = await metaFetcher('https://hoppscotch.io/');
 
     try {
-        const result = await metaFetcher('https://www.bbc.com/');
         return res.json({ "data": result});
     } catch(error){
         return res.json({ "error": error});
@@ -47,13 +47,10 @@ app.post('/fetch-metadata', async (req: Request, res: Response) => {
 
     const metadataPromises: Promise<Metadata>[] = urls.map(async (url) => {
         try {
-            const { data } = await axios.get(url);
-            const $ = cheerio.load(data);
-
-            const title = $('head > title').text();
-            const description = $('meta[name="description"]').attr('content') || '';
-            const image = $('meta[property="og:image"]').attr('content') || '';
-
+            const result = await metaFetcher(url);
+            const title = result.metadata.title;
+            const description = result.metadata.description;
+            const image = result.metadata.banner;
             return {
                 url,
                 title,

@@ -13,8 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const axios_1 = __importDefault(require("axios"));
-const cheerio_1 = __importDefault(require("cheerio"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const meta_fetcher_1 = __importDefault(require("meta-fetcher"));
 const app = (0, express_1.default)();
@@ -30,8 +28,8 @@ app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     return res.json({ "status": "API works" });
 }));
 app.get('/test', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield (0, meta_fetcher_1.default)('https://hoppscotch.io/');
     try {
-        const result = yield (0, meta_fetcher_1.default)('https://www.bbc.com/');
         return res.json({ "data": result });
     }
     catch (error) {
@@ -45,11 +43,10 @@ app.post('/fetch-metadata', (req, res) => __awaiter(void 0, void 0, void 0, func
     }
     const metadataPromises = urls.map((url) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { data } = yield axios_1.default.get(url);
-            const $ = cheerio_1.default.load(data);
-            const title = $('head > title').text();
-            const description = $('meta[name="description"]').attr('content') || '';
-            const image = $('meta[property="og:image"]').attr('content') || '';
+            const result = yield (0, meta_fetcher_1.default)(url);
+            const title = result.metadata.title;
+            const description = result.metadata.description;
+            const image = result.metadata.banner;
             return {
                 url,
                 title,
