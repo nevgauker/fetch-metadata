@@ -10,8 +10,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "csurf": "^1.11.0",
     "express": "^4.19.2",
     "express-rate-limit": "^7.4.0",
+    "helmet": "^7.1.0",
     "meta-fetcher": "^3.1.1"
   },
   "devDependencies": {
