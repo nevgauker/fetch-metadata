@@ -1,6 +1,9 @@
 import express, { Request, Response } from 'express';
 import rateLimit from 'express-rate-limit';
 import metaFetcher from 'meta-fetcher';
+import csurf from 'csurf';
+import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 
 const app = express();
 const PORT = 3000;
@@ -18,6 +21,10 @@ const limiter = rateLimit({
     max: 5, 
     message: { error: 'Too many requests, please try again later.' },
 });
+
+app.use(helmet()); // Sets various HTTP headers for security
+app.use(cookieParser()); // Parse cookies
+app.use(csurf({ cookie: true })); // CSRF protection
 
 app.use(express.json());
 app.use(limiter);
