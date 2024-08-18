@@ -26,13 +26,16 @@ const limiter = (0, express_rate_limit_1.default)({
 });
 app.use(express_1.default.json());
 app.use(limiter);
-app.get('/test', () => __awaiter(void 0, void 0, void 0, function* () {
+app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    return res.json({ "status": "API works" });
+}));
+app.get('/test', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const result = yield (0, meta_fetcher_1.default)('https://www.bbc.com/');
-        return (result);
+        return res.json({ "data": result });
     }
     catch (error) {
-        return (error);
+        return res.json({ "error": error });
     }
 }));
 app.post('/fetch-metadata', (req, res) => __awaiter(void 0, void 0, void 0, function* () {

@@ -24,14 +24,16 @@ const limiter = rateLimit({
 app.use(express.json());
 app.use(limiter);
 
-
-app.get('/test', async () => {
+app.get('/', async (req: Request, res: Response) => {
+    return res.json({ "status": "API works" });
+});
+app.get('/test', async (req: Request, res: Response) => {
 
     try {
         const result = await metaFetcher('https://www.bbc.com/');
-        return(result);
+        return res.json({ "data": result});
     } catch(error){
-        return(error);
+        return res.json({ "error": error});
     }
 
 });
