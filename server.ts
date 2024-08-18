@@ -16,12 +16,13 @@ interface Metadata {
     error?: string;
 }
 
+//requests per sec limtaion
 const limiter = rateLimit({
     windowMs: 1000, 
     max: 5, 
     message: { error: 'Too many requests, please try again later.' },
 });
-
+//security
 app.use(helmet()); // Sets various HTTP headers for security
 app.use(cookieParser()); // Parse cookies
 app.use(csurf({ cookie: true })); // CSRF protection
@@ -32,10 +33,14 @@ app.use(limiter);
 app.post('/fetch-metadata', async (req: Request, res: Response) => {
     const { urls }: { urls: string[] } = req.body;
 
+
+    //array of urls is required 
     if (!urls || !Array.isArray(urls)) {
         return res.status(400).json({ error: 'Please provide an array of URLs' });
     }
 
+
+    // iterate all urls and fetch metadata for each 
     const metadataPromises: Promise<Metadata>[] = urls.map(async (url) => {
         try {
             const result = await metaFetcher(url);
@@ -57,6 +62,10 @@ app.post('/fetch-metadata', async (req: Request, res: Response) => {
     res.json(metadata);
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+    });
+}
+
+export default app;

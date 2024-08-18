@@ -15,6 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const meta_fetcher_1 = __importDefault(require("meta-fetcher"));
+const csurf_1 = __importDefault(require("csurf"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const helmet_1 = __importDefault(require("helmet"));
 const app = (0, express_1.default)();
 const PORT = 3000;
 const limiter = (0, express_rate_limit_1.default)({
@@ -22,6 +25,9 @@ const limiter = (0, express_rate_limit_1.default)({
     max: 5,
     message: { error: 'Too many requests, please try again later.' },
 });
+app.use((0, helmet_1.default)()); // Sets various HTTP headers for security
+app.use((0, cookie_parser_1.default)()); // Parse cookies
+app.use((0, csurf_1.default)({ cookie: true })); // CSRF protection
 app.use(express_1.default.json());
 app.use(limiter);
 app.post('/fetch-metadata', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -49,6 +55,9 @@ app.post('/fetch-metadata', (req, res) => __awaiter(void 0, void 0, void 0, func
     const metadata = yield Promise.all(metadataPromises);
     res.json(metadata);
 }));
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+    });
+}
+exports.default = app;
