@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const chai_1 = require("chai");
-const server_1 = __importDefault(require("../server")); // Assuming your server is exported from this path
+const server_1 = __importDefault(require("../server"));
 describe('Fetch Metadata API', () => {
     it('should return metadata for valid URLs', () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(server_1.default)
@@ -28,7 +28,7 @@ describe('Fetch Metadata API', () => {
     it('should return an error for invalid request body', () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(server_1.default)
             .post('/fetch-metadata')
-            .send({ url: 'https://example.com' }); // Incorrect key, should be `urls`
+            .send({ url: 'https://hoppscotch.io' }); // Incorrect key, should be `urls`
         (0, chai_1.expect)(response.status).to.equal(400);
         (0, chai_1.expect)(response.body).to.have.property('error').that.equals('Please provide an array of URLs');
     }));
@@ -36,11 +36,11 @@ describe('Fetch Metadata API', () => {
         for (let i = 0; i < 6; i++) {
             yield (0, supertest_1.default)(server_1.default)
                 .post('/fetch-metadata')
-                .send({ urls: ['https://example.com'] });
+                .send({ urls: ['https://hoppscotch.io'] });
         }
         const response = yield (0, supertest_1.default)(server_1.default)
             .post('/fetch-metadata')
-            .send({ urls: ['https://example.com'] });
+            .send({ urls: ['https://hoppscotch.io'] });
         (0, chai_1.expect)(response.status).to.equal(429);
         (0, chai_1.expect)(response.body).to.have.property('error').that.equals('Too many requests, please try again later.');
     }));

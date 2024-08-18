@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { expect } from 'chai';
-import app from '../server'; // Assuming your server is exported from this path
+import app from '../server'; 
 
 describe('Fetch Metadata API', () => {
 

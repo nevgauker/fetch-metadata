@@ -20,11 +20,13 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const helmet_1 = __importDefault(require("helmet"));
 const app = (0, express_1.default)();
 const PORT = 3000;
+//requests per sec limtaion
 const limiter = (0, express_rate_limit_1.default)({
     windowMs: 1000,
     max: 5,
     message: { error: 'Too many requests, please try again later.' },
 });
+//security
 app.use((0, helmet_1.default)()); // Sets various HTTP headers for security
 app.use((0, cookie_parser_1.default)()); // Parse cookies
 app.use((0, csurf_1.default)({ cookie: true })); // CSRF protection
@@ -32,9 +34,11 @@ app.use(express_1.default.json());
 app.use(limiter);
 app.post('/fetch-metadata', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { urls } = req.body;
+    //array of urls is required 
     if (!urls || !Array.isArray(urls)) {
         return res.status(400).json({ error: 'Please provide an array of URLs' });
     }
+    // iterate all urls and fetch metadata for each 
     const metadataPromises = urls.map((url) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const result = yield (0, meta_fetcher_1.default)(url);
