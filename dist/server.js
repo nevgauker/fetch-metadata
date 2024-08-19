@@ -29,7 +29,7 @@ const limiter = (0, express_rate_limit_1.default)({
 //security
 app.use((0, helmet_1.default)()); // Sets various HTTP headers for security
 app.use((0, cookie_parser_1.default)()); // Parse cookies
-app.use((0, csurf_1.default)({ cookie: true })); // CSRF protection
+// app.use((0, csurf_1.default)({ cookie: true })); // CSRF protection
 app.use(express_1.default.json());
 app.use(limiter);
 app.post('/fetch-metadata', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
